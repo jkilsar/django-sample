@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.views import View
 from .models import Contact
 
-def contact(request):
-    if request.method == 'POST':
+class ContatView(View):
+
+    def post(self, request):
         listing_id = request.POST['listing_id']
         listing = request.POST['listing']
         name = request.POST['name']
@@ -36,4 +38,4 @@ def contact(request):
 
         messages.success(request, "Your request has been submitted, a realtor will get back to you soon")
     
-        return redirect('/listings/'+listing_id) 
+        return redirect('/listings/'+listing_id)

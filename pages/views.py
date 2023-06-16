@@ -1,32 +1,37 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views import View
 
 from listings.models import Listing
 from realtors.models import Realtor
 from listings.choices import price_choices, bedroom_choices, state_choices
 
-def index(request):
-    listings = Listing.objects.order_by('-list_date').filter(is_published=True)[:3]
+class IndexView(View):
 
-    context = {
-        'listings': listings,
-        'state_choices': state_choices,
-        'price_choices': price_choices,
-        'bedroom_choices': bedroom_choices
-    }
+    def get(self, request):
+        listings = Listing.objects.order_by('-list_date').filter(is_published=True)[:3]
 
-    return render(request, 'pages/index.html', context)
+        context = {
+            'listings': listings,
+            'state_choices': state_choices,
+            'price_choices': price_choices,
+            'bedroom_choices': bedroom_choices
+        }
 
-def about(request):
-    # Get all realtors
-    realtors = Realtor.objects.order_by('-hire_date')
+        return render(request, 'pages/index.html', context)
 
-    # Get MVP
-    mvp_realtors = Realtor.objects.all().filter(is_mvp=True)
+class AboutView(View):
 
-    context = {
-        'realtors': realtors,
-        'mvp_realtors': mvp_realtors
-    }
+    def get(self, request):
+        # Get all realtors
+        realtors = Realtor.objects.order_by('-hire_date')
 
-    return render(request, 'pages/about.html', context)
+        # Get MVP
+        mvp_realtors = Realtor.objects.all().filter(is_mvp=True)
+
+        context = {
+            'realtors': realtors,
+            'mvp_realtors': mvp_realtors
+        }
+
+        return render(request, 'pages/about.html', context)

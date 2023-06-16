@@ -1,11 +1,16 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
+from django.views import View
 
 from contacts.models import Contact
 
-def register(request):
-    if request.method == 'POST':
+class RegisterView(View):
+
+    def get(self, request):
+        return render(request, 'accounts/register.html')
+    
+    def post(self, request):
         # Get form values
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -33,11 +38,14 @@ def register(request):
         else:
             messages.error(request, "Passwords do not match")
             return redirect('register')
-    else:
-        return render(request, 'accounts/register.html')
 
-def login(request):
-    if request.method == 'POST':
+class LoginView(View):
+
+    def get(self, request):
+        return render(request, 'accounts/login.html')
+    
+    def post(self, request):
+        # Get form values
         username = request.POST['username']
         password = request.POST['password']
 
@@ -50,23 +58,21 @@ def login(request):
         else:
             messages.error(request, "Invalid Credentials")
             return redirect('login')
-    else:
-        return render(request, 'accounts/login.html')
 
-def logout(request):
+class LogoutView(View):
 
-    if request.method == 'POST':
+    def post(self, request):
         auth.logout(request)
         messages.success(request, 'You are now logged out')
         return redirect('index')
 
-    return redirect('index')
+class DashBoardView(View):
 
-def dashboard(request):
-    user_contacts = Contact.objects.order_by('-contact_date').filter(user_id=request.user.id)
+    def get(self, request):
+        user_contacts = Contact.objects.order_by('-contact_date').filter(user_id=request.user.id)
 
-    context = {
-        'contacts': user_contacts
-    }
+        context = {
+            'contacts': user_contacts
+        }
 
-    return render(request, 'accounts/dashboard.html', context)
+        return render(request, 'accounts/dashboard.html', context)
