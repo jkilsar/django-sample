@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import ListingsView, ListingView, SearchView
 
-from . import views
 
 urlpatterns = [
     path('', ListingsView.as_view(), name='listings'),
