@@ -62,4 +62,27 @@
     </div>
   </div>
 </section>
+<section id="dashboard" class="py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h5> Two-Factor Authentication</h5>
+
+        <br>
+
+        <p> Two-factor authenticatoin provides users with extra security. </p>
+
+        <a href="{% url 'two_factor:setup' %}" type="button" class="btn btn-info navbar-btn"> Enable 2FA</a>
+
+        <br>
+        <br>
+
+        <a href="{% url 'two_factor:profile' %}" type="button" class="btn btn-primary navbar-btn"> 2FA Account Settings</a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ redirect_to_login_immediately }}
 {% endblock %}
