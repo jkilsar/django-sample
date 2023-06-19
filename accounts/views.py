@@ -27,6 +27,10 @@ class RegisterView(View):
             messages.error(request, form.errors.as_text())
             return redirect('register')
 
+class AccountLockedView(View):
+
+    def get(self, request):
+        return render(request, 'accounts/account-locked.html')
 
 class LoginView(View):
 

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
     'two_factor',
+    'axes', # axes
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -71,6 +72,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_auto_logout.middleware.auto_logout', # Auto logout
+    'axes.middleware.AxesMiddleware', # axes - required to be at the end of the list
+]
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesStandaloneBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'btre.urls'
@@ -173,8 +183,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Auto logout
 
 AUTO_LOGOUT = {
-    'IDLE_TIME': 10, # 10 seconds for testing
+    'IDLE_TIME': 600, # 10 seconds for testing
     #'SESSION_TIME': timedelta(seconds=10), # 10 seconds for testing
     #'MESSAGE': 'You have been logged out due to inactivity.',
     'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
 }
+
+# Axes - brute force protection
+
+AXES_FAILURE_LIMIT = 3 # How many failed attempts before lockout
+
+AXES_COOLOFF_TIME = 1 # How long in hours to lockout user
+
+AXES_RESET_ON_SUCCESS = True # Reset failed attempts after successful login
+
+AXES_LOCKOUT_TEMPLATE = 'accounts/account-locked.html' # Custom lockout template
+
+# Additional Configuration
+AXES_LOCKOUT_PARAMETERS = ["username"] # Lockout based on username
